@@ -14,6 +14,7 @@
 
 #include"Vertex.hpp"
 #include "Camera.hpp"
+#include"Object.hpp"
 
 struct Vertex;
 
@@ -57,9 +58,6 @@ struct VulkanContext
 
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
-
-	VkPipelineLayout pipelineLayout2;
-	VkPipeline graphicsPipeline2;
 
 	std::vector<VkFramebuffer> swapchainFrameBuffers;
 
@@ -111,6 +109,10 @@ struct VulkanContext
 #else
 	const bool enableValidationLayers = true;
 #endif
+
+	std::vector<Object> objects;
+	
+	std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
 };
 
 extern VulkanContext gVulkanContext;

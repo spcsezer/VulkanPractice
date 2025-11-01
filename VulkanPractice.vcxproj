@@ -39,6 +39,7 @@
     <ClInclude Include="GlobalState.hpp" />
     <ClInclude Include="InitializeWindow.hpp" />
     <ClInclude Include="LoadModel.hpp" />
+    <ClInclude Include="Object.hpp" />
     <ClInclude Include="PickPhysicalDevice.hpp" />
     <ClInclude Include="QueueFamilies.hpp" />
     <ClInclude Include="Run.hpp" />

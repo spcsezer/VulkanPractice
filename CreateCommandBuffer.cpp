@@ -100,20 +100,15 @@ void CreateCommandBuffer::recordCommandBuffer(VkCommandBuffer commandBuffer, uin
 	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, gVulkanContext.graphicsPipeline);
-	VkBuffer vertexBuffers[] = { gVulkanContext.vertexBuffer };
-	VkDeviceSize offsets[] = { 0 };
-	vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-	vkCmdBindIndexBuffer(commandBuffer, gVulkanContext.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, gVulkanContext.pipelineLayout, 0, 1, &gVulkanContext.descriptorSets[imageIndex], 0, nullptr);
-	vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(gVulkanContext.indices.size()), 1, 0, 0, 0);
-
-	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, gVulkanContext.graphicsPipeline2);
-	VkBuffer vertexBuffers2[] = { gVulkanContext.vertexBuffer2 };
-	VkDeviceSize offsets2[] = { 0 };
-	vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers2, offsets2);
-	vkCmdBindIndexBuffer(commandBuffer, gVulkanContext.indexBuffer2, 0, VK_INDEX_TYPE_UINT32);
-	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, gVulkanContext.pipelineLayout2, 0, 1, &gVulkanContext.descriptorSets2[imageIndex], 0, nullptr);
-	vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(gVulkanContext.indices2.size()), 1, 0, 0, 0);
+	for (auto& obj : gVulkanContext.objects)
+	{
+		VkBuffer vertexBuffers[] = { obj.vertexBuffer };
+		VkDeviceSize offsets[] = { 0 };
+		vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+		vkCmdBindIndexBuffer(commandBuffer, obj.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, gVulkanContext.pipelineLayout, 0, 1, &obj.descriptorSets[imageIndex], 0, nullptr);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(obj.indices.size()), 1, 0, 0, 0);
+	}
 
 	vkCmdEndRenderPass(commandBuffer);
 

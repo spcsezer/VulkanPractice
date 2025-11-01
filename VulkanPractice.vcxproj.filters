@@ -88,6 +88,9 @@
     <Filter Include="Render">
       <UniqueIdentifier>{ed3fa942-48e1-4094-91a2-47bdb6d7de1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Structs\Object">
+      <UniqueIdentifier>{33a23086-b944-4c68-817e-823986ba18df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GlobalState.hpp">
@@ -172,6 +175,9 @@
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="Run.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

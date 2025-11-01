@@ -9,6 +9,21 @@ void CreateDescriptorSets::gCreateDescriptorSets()
 	createDescriptorPool(descriptorPool2);
 	createDescriptorSets(gVulkanContext.uniformBuffers2, gVulkanContext.textureImageView2, gVulkanContext.textureSampler2, descriptorSets2, gVulkanContext.descriptorSetLayout2, descriptorPool2);
 	gVulkanContext.descriptorSets2 = descriptorSets2;
+
+	Object object1;
+	object1.vertexBuffer = gVulkanContext.vertexBuffer;
+	object1.indexBuffer = gVulkanContext.indexBuffer;
+	object1.indices = gVulkanContext.indices;
+	object1.descriptorSets = descriptorSets;
+
+	Object object2;
+	object2.vertexBuffer = gVulkanContext.vertexBuffer2;
+	object2.indexBuffer = gVulkanContext.indexBuffer2;
+	object2.indices = gVulkanContext.indices2;
+	object2.descriptorSets = descriptorSets2;
+
+	gVulkanContext.objects.push_back(object1);
+	gVulkanContext.objects.push_back(object2);
 }
 
 void CreateDescriptorSets::cleanUp()

@@ -7,6 +7,9 @@ void CreateDescriptorSetLayout::gCreateDescriptorSetLayout()
 
 	createDescriptorSetLayout(descriptorSetLayout2);
 	gVulkanContext.descriptorSetLayout2 = descriptorSetLayout2;
+
+	gVulkanContext.descriptorSetLayouts.push_back(descriptorSetLayout);
+	gVulkanContext.descriptorSetLayouts.push_back(descriptorSetLayout2);
 }
 
 void CreateDescriptorSetLayout::cleanUp()

@@ -12,11 +12,6 @@ private:
 	const char* vertexShaderFile = "shaders/vert.spv";
 	const char* fragmentShaderFile = "shaders/frag.spv";
 
-	VkPipelineLayout pipelineLayout2;
-	VkPipeline graphicsPipeline2;
-	const char* vertexShaderFile2 = "shaders/vert2.spv";
-	const char* fragmentShaderFile2 = "shaders/frag2.spv";
-
 	void createGraphicsPipeline(const char* vertexShaderFile, const char* fragmentShaderFile, VkPipelineLayout& pipelineLayout, VkPipeline& graphicsPipeline, VkDescriptorSetLayout& descriptorSetLayout);
 
 	std::vector<char> readFile(const std::string& fileName);

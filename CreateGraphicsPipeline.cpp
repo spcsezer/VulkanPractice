@@ -5,10 +5,6 @@ void CreateGraphicsPipeline::gCreateGraphicsPipeline()
 	createGraphicsPipeline(vertexShaderFile, fragmentShaderFile, pipelineLayout, graphicsPipeline, gVulkanContext.descriptorSetLayout);
 	gVulkanContext.pipelineLayout = pipelineLayout;
 	gVulkanContext.graphicsPipeline = graphicsPipeline;
-
-	createGraphicsPipeline(vertexShaderFile2, fragmentShaderFile2, pipelineLayout2, graphicsPipeline2, gVulkanContext.descriptorSetLayout2);
-	gVulkanContext.pipelineLayout2 = pipelineLayout2;
-	gVulkanContext.graphicsPipeline2 = graphicsPipeline2;
 }
 
 void CreateGraphicsPipeline::cleanUp()
@@ -17,11 +13,6 @@ void CreateGraphicsPipeline::cleanUp()
 	vkDestroyPipelineLayout(gVulkanContext.device, pipelineLayout, nullptr);
 	gVulkanContext.pipelineLayout = nullptr;
 	gVulkanContext.graphicsPipeline = nullptr;
-
-	vkDestroyPipeline(gVulkanContext.device, graphicsPipeline2, nullptr);
-	vkDestroyPipelineLayout(gVulkanContext.device, pipelineLayout2, nullptr);
-	gVulkanContext.pipelineLayout2 = nullptr;
-	gVulkanContext.graphicsPipeline2 = nullptr;
 }
 
 void CreateGraphicsPipeline::createGraphicsPipeline(const char* vertexShaderFile, const char* fragmentShaderFile, VkPipelineLayout& pipelineLayout, VkPipeline& graphicsPipeline, VkDescriptorSetLayout& descriptorSetLayout)
@@ -143,8 +134,8 @@ void CreateGraphicsPipeline::createGraphicsPipeline(const char* vertexShaderFile
 
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.setLayoutCount = 1;
-	pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
+	pipelineLayoutInfo.setLayoutCount = 2;
+	pipelineLayoutInfo.pSetLayouts = gVulkanContext.descriptorSetLayouts.data();
 	pipelineLayoutInfo.pushConstantRangeCount = 0;
 	pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
