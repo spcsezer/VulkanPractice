@@ -19,13 +19,65 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="handleStructs.hpp" />
-    <ClInclude Include="library.hpp" />
-    <ClInclude Include="VulkanEngine.hpp" />
+    <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="CreateBuffer.hpp" />
+    <ClInclude Include="CreateCommandBuffer.hpp" />
+    <ClInclude Include="CreateCommandPool.hpp" />
+    <ClInclude Include="CreateDescriptorSetLayout.hpp" />
+    <ClInclude Include="CreateDescriptorSets.hpp" />
+    <ClInclude Include="CreateFrameBuffers.hpp" />
+    <ClInclude Include="CreateGraphicsPipeline.hpp" />
+    <ClInclude Include="CreateImageViews.hpp" />
+    <ClInclude Include="CreateInstance.hpp" />
+    <ClInclude Include="CreateLogicalDevice.hpp" />
+    <ClInclude Include="CreateRenderPass.hpp" />
+    <ClInclude Include="CreateResources.hpp" />
+    <ClInclude Include="CreateSurface.hpp" />
+    <ClInclude Include="CreateSyncObjects.hpp" />
+    <ClInclude Include="CreateTexture.hpp" />
+    <ClInclude Include="DrawFrame.hpp" />
+    <ClInclude Include="GlobalState.hpp" />
+    <ClInclude Include="InitializeWindow.hpp" />
+    <ClInclude Include="LoadModel.hpp" />
+    <ClInclude Include="PickPhysicalDevice.hpp" />
+    <ClInclude Include="QueueFamilies.hpp" />
+    <ClInclude Include="Run.hpp" />
+    <ClInclude Include="SwapChain.hpp" />
+    <ClInclude Include="SwapChainSupportDetails.hpp" />
+    <ClInclude Include="UniformBufferObject.hpp" />
+    <ClInclude Include="ValidationLayers.hpp" />
+    <ClInclude Include="Vertex.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CreateBuffer.cpp" />
+    <ClCompile Include="CreateCommandBuffer.cpp" />
+    <ClCompile Include="CreateCommandPool.cpp" />
+    <ClCompile Include="CreateDescriptorSetLayout.cpp" />
+    <ClCompile Include="CreateDescriptorSets.cpp" />
+    <ClCompile Include="CreateFrameBuffers.cpp" />
+    <ClCompile Include="CreateGraphicsPipeline.cpp" />
+    <ClCompile Include="CreateImageViews.cpp" />
+    <ClCompile Include="CreateInstance.cpp" />
+    <ClCompile Include="CreateLogicalDevice.cpp" />
+    <ClCompile Include="CreateRenderPass.cpp" />
+    <ClCompile Include="CreateResources.cpp" />
+    <ClCompile Include="CreateSurface.cpp" />
+    <ClCompile Include="CreateSyncObjects.cpp" />
+    <ClCompile Include="CreateTexture.cpp" />
+    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Engine.hpp" />
+    <ClCompile Include="GlobalState.cpp" />
+    <ClCompile Include="InitializeWindow.cpp" />
+    <ClCompile Include="LoadModel.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="VulkanEngine.cpp" />
+    <ClCompile Include="PickPhysicalDevice.cpp" />
+    <ClCompile Include="QueueFamilies.cpp" />
+    <ClCompile Include="SwapChain.cpp" />
+    <ClCompile Include="SwapChainSupportDetails.cpp" />
+    <ClCompile Include="UniformBufferObject.cpp" />
+    <ClCompile Include="ValidationLayers.cpp" />
+    <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -114,6 +166,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>C:\VulkanSDK\1.4.328.0\Include;C:\VulkanSDK\glm;C:\VulkanSDK\GLFW\include;C:\VulkanSDK\stb-master;C:\VulkanSDK\tinyObjLoader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

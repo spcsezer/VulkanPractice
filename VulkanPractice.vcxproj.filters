@@ -13,23 +13,254 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="GlobalState">
+      <UniqueIdentifier>{eebe909c-7d41-4e52-b0ed-9a81e852e1af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Instance">
+      <UniqueIdentifier>{a62aa572-7200-49ed-a69e-739bccf0061f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{837f9e6e-7292-468d-9386-7e1c9a97144f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Surface">
+      <UniqueIdentifier>{11cbc653-6c22-42aa-b9ef-d791cb74b67a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PhysicalDevice">
+      <UniqueIdentifier>{e3b128b1-8aef-41f2-8eb3-cb7911ea41d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LogicalDevice">
+      <UniqueIdentifier>{80041377-0910-4521-97f4-32d28838dac8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structs">
+      <UniqueIdentifier>{dfc8a4c4-1190-44cb-9c00-f748ccf99634}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structs\Camera">
+      <UniqueIdentifier>{6af5b430-aa52-4c58-9c9a-536f6efe32b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structs\QueueFamilies">
+      <UniqueIdentifier>{54eb8467-ba85-46d3-9ba8-619e8f645324}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ValidationLayers">
+      <UniqueIdentifier>{eec6e519-43f6-4c28-a56c-ba066b6fb02e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SwapChain">
+      <UniqueIdentifier>{e85c37dc-30c0-4904-a49c-0b504ced27de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structs\SwapChainSupportDetails">
+      <UniqueIdentifier>{14992056-0cbf-4e6a-8162-03fc5da50210}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImageView">
+      <UniqueIdentifier>{885d72fc-b0b6-4d47-899c-f617e7897648}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderPass">
+      <UniqueIdentifier>{5fcacc46-53f3-497c-91e2-ca3b52e1f867}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GraphicsPipeline">
+      <UniqueIdentifier>{36fdaa76-bece-4bec-84cc-32c050cd559f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structs\Vertex">
+      <UniqueIdentifier>{28471662-2559-4977-af4a-1161019d8667}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command">
+      <UniqueIdentifier>{825a5396-a21b-4bc0-bb8d-940d87c159d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{8b0306db-f3ec-4f9d-9d88-65aa3da20bac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FrameBuffers">
+      <UniqueIdentifier>{b2c660d2-070e-4eb3-8310-12beb7fc0803}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{699e8da8-bd97-4563-99e2-d2ea1c0375d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Buffer">
+      <UniqueIdentifier>{5b2122ab-3ef3-4ffc-8e40-049737f24cb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{7fa6b339-7c65-4b7b-a84c-9f0144d4ef4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structs\UniformBufferObject">
+      <UniqueIdentifier>{570873e4-3409-433e-a6b2-d68a6c58487c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Descriptor">
+      <UniqueIdentifier>{8f4e69eb-1c49-4f1e-9dda-8d46747d4004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{ed3fa942-48e1-4094-91a2-47bdb6d7de1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="VulkanEngine.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GlobalState.hpp">
+      <Filter>GlobalState</Filter>
     </ClInclude>
-    <ClInclude Include="handleStructs.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="CreateInstance.hpp">
+      <Filter>Instance</Filter>
     </ClInclude>
-    <ClInclude Include="library.hpp">
+    <ClInclude Include="InitializeWindow.hpp">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateSurface.hpp">
+      <Filter>Surface</Filter>
+    </ClInclude>
+    <ClInclude Include="PickPhysicalDevice.hpp">
+      <Filter>PhysicalDevice</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateLogicalDevice.hpp">
+      <Filter>LogicalDevice</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.hpp">
+      <Filter>Structs\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="QueueFamilies.hpp">
+      <Filter>Structs\QueueFamilies</Filter>
+    </ClInclude>
+    <ClInclude Include="ValidationLayers.hpp">
+      <Filter>ValidationLayers</Filter>
+    </ClInclude>
+    <ClInclude Include="SwapChain.hpp">
+      <Filter>SwapChain</Filter>
+    </ClInclude>
+    <ClInclude Include="SwapChainSupportDetails.hpp">
+      <Filter>Structs\SwapChainSupportDetails</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateImageViews.hpp">
+      <Filter>ImageView</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateRenderPass.hpp">
+      <Filter>RenderPass</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateDescriptorSetLayout.hpp">
+      <Filter>Descriptor</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateGraphicsPipeline.hpp">
+      <Filter>GraphicsPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.hpp">
+      <Filter>Structs\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateCommandPool.hpp">
+      <Filter>Command</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateResources.hpp">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateFrameBuffers.hpp">
+      <Filter>FrameBuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateTexture.hpp">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateBuffer.hpp">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadModel.hpp">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="UniformBufferObject.hpp">
+      <Filter>Structs\UniformBufferObject</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateDescriptorSets.hpp">
+      <Filter>Descriptor</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateCommandBuffer.hpp">
+      <Filter>Command</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateSyncObjects.hpp">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawFrame.hpp">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Run.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="VulkanEngine.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="GlobalState.cpp">
+      <Filter>GlobalState</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateInstance.cpp">
+      <Filter>Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="InitializeWindow.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateSurface.cpp">
+      <Filter>Surface</Filter>
+    </ClCompile>
+    <ClCompile Include="PickPhysicalDevice.cpp">
+      <Filter>PhysicalDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateLogicalDevice.cpp">
+      <Filter>LogicalDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Structs\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="QueueFamilies.cpp">
+      <Filter>Structs\QueueFamilies</Filter>
+    </ClCompile>
+    <ClCompile Include="ValidationLayers.cpp">
+      <Filter>ValidationLayers</Filter>
+    </ClCompile>
+    <ClCompile Include="SwapChain.cpp">
+      <Filter>SwapChain</Filter>
+    </ClCompile>
+    <ClCompile Include="SwapChainSupportDetails.cpp">
+      <Filter>Structs\SwapChainSupportDetails</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateImageViews.cpp">
+      <Filter>ImageView</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateRenderPass.cpp">
+      <Filter>RenderPass</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateDescriptorSetLayout.cpp">
+      <Filter>Descriptor</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateGraphicsPipeline.cpp">
+      <Filter>GraphicsPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>Structs\Vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateCommandPool.cpp">
+      <Filter>Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateResources.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateFrameBuffers.cpp">
+      <Filter>FrameBuffers</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateTexture.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateBuffer.cpp">
+      <Filter>Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="UniformBufferObject.cpp">
+      <Filter>Structs\UniformBufferObject</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateDescriptorSets.cpp">
+      <Filter>Descriptor</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateCommandBuffer.cpp">
+      <Filter>Command</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.hpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateSyncObjects.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

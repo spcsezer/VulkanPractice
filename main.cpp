@@ -1,12 +1,11 @@
-#include "VulkanEngine.hpp"
+#include"Run.hpp"
 
 int main()
 {
-	VulkanEngine vulkanEngine;
-
+	gVulkanContext.validationLayers = &validationLayers;
 	try
 	{
-		vulkanEngine.run();
+		RunProgram();
 	}
 	catch (const std::exception& e)
 	{
