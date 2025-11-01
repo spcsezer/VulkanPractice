@@ -50,11 +50,16 @@ struct VulkanContext
 	VkRenderPass renderPass;
 
 	VkDescriptorSetLayout descriptorSetLayout;
+	VkDescriptorSetLayout descriptorSetLayout2;
+
 	std::vector<VkDescriptorSet> descriptorSets;
+	std::vector<VkDescriptorSet> descriptorSets2;
 
 	VkPipelineLayout pipelineLayout;
-
 	VkPipeline graphicsPipeline;
+
+	VkPipelineLayout pipelineLayout2;
+	VkPipeline graphicsPipeline2;
 
 	std::vector<VkFramebuffer> swapchainFrameBuffers;
 
@@ -73,17 +78,27 @@ struct VulkanContext
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
 
+	std::vector<Vertex> vertices2;
+	std::vector<uint32_t> indices2;
+
 	const int MAX_FRAMES_IN_FLIGHT = 2;
 	bool frameBufferResized = false;
 
 	VkBuffer vertexBuffer;
 	VkBuffer indexBuffer;
-
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<void*> uniformBuffersMapped;
 
+	VkBuffer vertexBuffer2;
+	VkBuffer indexBuffer2;
+	std::vector<VkBuffer> uniformBuffers2;
+	std::vector<void*> uniformBuffersMapped2;
+
 	VkImageView textureImageView;
 	VkSampler textureSampler;
+
+	VkImageView textureImageView2;
+	VkSampler textureSampler2;
 
 	uint32_t currentFrame = 0;
 

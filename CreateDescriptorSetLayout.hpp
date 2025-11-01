@@ -7,8 +7,9 @@ class CreateDescriptorSetLayout
 private:
 
 	VkDescriptorSetLayout descriptorSetLayout;
+	VkDescriptorSetLayout descriptorSetLayout2;
 
-	void createDescriptorSetLayout();
+	void createDescriptorSetLayout(VkDescriptorSetLayout& descriptorSetLayout);
 
 public:
 

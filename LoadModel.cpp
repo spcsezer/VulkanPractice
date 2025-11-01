@@ -5,12 +5,16 @@
 
 void LoadModel::gLoadModel()
 {
-	loadModel();
+	loadModel(MODEL_PATH, vertices, indices);
 	gVulkanContext.vertices = vertices;
 	gVulkanContext.indices = indices;
+
+	loadModel(MODEL_PATH2, vertices2, indices2);
+	gVulkanContext.vertices2 = vertices2;
+	gVulkanContext.indices2 = indices2;
 }
 
-void LoadModel::loadModel()
+void LoadModel::loadModel(const std::string& MODEL_PATH, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices)
 {
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;

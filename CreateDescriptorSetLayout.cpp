@@ -2,17 +2,23 @@
 
 void CreateDescriptorSetLayout::gCreateDescriptorSetLayout()
 {
-	createDescriptorSetLayout();
+	createDescriptorSetLayout(descriptorSetLayout);
 	gVulkanContext.descriptorSetLayout = descriptorSetLayout;
+
+	createDescriptorSetLayout(descriptorSetLayout2);
+	gVulkanContext.descriptorSetLayout2 = descriptorSetLayout2;
 }
 
 void CreateDescriptorSetLayout::cleanUp()
 {
 	vkDestroyDescriptorSetLayout(gVulkanContext.device, descriptorSetLayout, nullptr);
 	gVulkanContext.descriptorSetLayout = nullptr;
+
+	vkDestroyDescriptorSetLayout(gVulkanContext.device, descriptorSetLayout2, nullptr);
+	gVulkanContext.descriptorSetLayout2 = nullptr;
 }
 
-void CreateDescriptorSetLayout::createDescriptorSetLayout()
+void CreateDescriptorSetLayout::createDescriptorSetLayout(VkDescriptorSetLayout& descriptorSetLayout)
 {
 	VkDescriptorSetLayoutBinding uboLayoutBinding{};
 	uboLayoutBinding.binding = 0;

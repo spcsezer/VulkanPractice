@@ -10,8 +10,11 @@ private:
 	VkDescriptorPool descriptorPool;
 	std::vector<VkDescriptorSet> descriptorSets;
 
-	void createDescriptorPool();
-	void createDescriptorSets();
+	VkDescriptorPool descriptorPool2;
+	std::vector<VkDescriptorSet> descriptorSets2;
+
+	void createDescriptorPool(VkDescriptorPool& descriptorPool);
+	void createDescriptorSets(std::vector<VkBuffer>& uniformBuffers, VkImageView& textureImageView, VkSampler& textureSampler, std::vector<VkDescriptorSet>& descriptorSets, VkDescriptorSetLayout& descriptorSetLayout, VkDescriptorPool& descriptorPool);
 
 public:
 

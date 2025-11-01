@@ -1,15 +1,23 @@
 #include "CreateBuffer.hpp"
+#include"string.h"
 
 void CreateBuffer::gCreateBuffer()
 {
-	createVertexBuffer();
-	createIndexBuffer();
-	createUniformBuffers();
-
+	createVertexBuffer(gVulkanContext.vertices, vertexBuffer, vertexBufferMemory);
+	createIndexBuffer(gVulkanContext.indices, indexBuffer, indexBufferMemory);
+	createUniformBuffers(uniformBuffers, uniformBuffersMemory, uniformBuffersMapped);
 	gVulkanContext.vertexBuffer = vertexBuffer;
 	gVulkanContext.indexBuffer = indexBuffer;
 	gVulkanContext.uniformBuffers = uniformBuffers;
 	gVulkanContext.uniformBuffersMapped = uniformBuffersMapped;
+
+	createVertexBuffer(gVulkanContext.vertices2, vertexBuffer2, vertexBufferMemory2);
+	createIndexBuffer(gVulkanContext.indices2, indexBuffer2, indexBufferMemory2);
+	createUniformBuffers(uniformBuffers2, uniformBuffersMemory2, uniformBuffersMapped2);
+	gVulkanContext.vertexBuffer2 = vertexBuffer2;
+	gVulkanContext.indexBuffer2 = indexBuffer2;
+	gVulkanContext.uniformBuffers2 = uniformBuffers2;
+	gVulkanContext.uniformBuffersMapped2 = uniformBuffersMapped2;
 }
 
 void CreateBuffer::cleanUp()
@@ -23,23 +31,33 @@ void CreateBuffer::cleanUp()
 	vkFreeMemory(gVulkanContext.device, vertexBufferMemory, nullptr);
 	vkDestroyBuffer(gVulkanContext.device, indexBuffer, nullptr);
 	vkFreeMemory(gVulkanContext.device, indexBufferMemory, nullptr);
+
+	for (size_t i = 0; i < gVulkanContext.MAX_FRAMES_IN_FLIGHT; i++)
+	{
+		vkDestroyBuffer(gVulkanContext.device, uniformBuffers2[i], nullptr);
+		vkFreeMemory(gVulkanContext.device, uniformBuffersMemory2[i], nullptr);
+	}
+	vkDestroyBuffer(gVulkanContext.device, vertexBuffer2, nullptr);
+	vkFreeMemory(gVulkanContext.device, vertexBufferMemory2, nullptr);
+	vkDestroyBuffer(gVulkanContext.device, indexBuffer2, nullptr);
+	vkFreeMemory(gVulkanContext.device, indexBufferMemory2, nullptr);
 }
 
-void CreateBuffer::createVertexBuffer()
+void CreateBuffer::createVertexBuffer(std::vector<Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory)
 {
-	VkDeviceSize bufferSize = sizeof(gVulkanContext.vertices[0]) * gVulkanContext.vertices.size();
+	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
 
-	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory, "Vertex Buffer Staging");
 
 	void* data;
 	vkMapMemory(gVulkanContext.device, stagingBufferMemory, 0, bufferSize, 0, &data);
-	memcpy(data, gVulkanContext.vertices.data(), (size_t)bufferSize);
+	memcpy(data, vertices.data(), (size_t)bufferSize);
 	vkUnmapMemory(gVulkanContext.device, stagingBufferMemory);
 
-	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
+	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory, "Vertex Buffer");
 
 	copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
 
@@ -47,20 +65,20 @@ void CreateBuffer::createVertexBuffer()
 	vkFreeMemory(gVulkanContext.device, stagingBufferMemory, nullptr);
 }
 
-void CreateBuffer::createIndexBuffer()
+void CreateBuffer::createIndexBuffer(std::vector<uint32_t>& indices, VkBuffer& indexBuffer, VkDeviceMemory& indexBufferMemory)
 {
-	VkDeviceSize bufferSize = sizeof(gVulkanContext.indices[0]) * gVulkanContext.indices.size();
+	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
-	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory, "Index Buffer Staging");
 
 	void* data;
 	vkMapMemory(gVulkanContext.device, stagingBufferMemory, 0, bufferSize, 0, &data);
-	memcpy(data, gVulkanContext.indices.data(), (size_t)bufferSize);
+	memcpy(data, indices.data(), (size_t)bufferSize);
 	vkUnmapMemory(gVulkanContext.device, stagingBufferMemory);
 
-	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
+	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory, "Index Buffer");
 
 	copyBuffer(stagingBuffer, indexBuffer, bufferSize);
 
@@ -68,7 +86,7 @@ void CreateBuffer::createIndexBuffer()
 	vkFreeMemory(gVulkanContext.device, stagingBufferMemory, nullptr);
 }
 
-void CreateBuffer::createUniformBuffers()
+void CreateBuffer::createUniformBuffers(std::vector<VkBuffer>& uniformBuffers, std::vector<VkDeviceMemory>& uniformBuffersMemory, std::vector<void*>& uniformBuffersMapped)
 {
 	VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
@@ -78,7 +96,7 @@ void CreateBuffer::createUniformBuffers()
 
 	for (size_t i = 0; i < gVulkanContext.MAX_FRAMES_IN_FLIGHT; i++)
 	{
-		createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+		createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i], "Uniform Buffer");
 
 		vkMapMemory(gVulkanContext.device, uniformBuffersMemory[i], 0, bufferSize, 0, &uniformBuffersMapped[i]);
 	}
@@ -115,7 +133,7 @@ void CreateBuffer::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t wi
 	CreateCommandBuffer::endSingleTimeCommands(commandBuffer);
 }
 
-void CreateBuffer::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
+void CreateBuffer::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory, std::string typeOfBuffer)
 {
 	VkBufferCreateInfo bufferInfo{};
 	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -138,13 +156,13 @@ void CreateBuffer::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkM
 
 	if (vkAllocateMemory(gVulkanContext.device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS)
 	{
-		throw std::runtime_error("!-- Failed to allocate buffer memory --!");
+		throw std::runtime_error("!-- Failed to allocate buffer memory --! : " + typeOfBuffer);
 	}
 
 	vkBindBufferMemory(gVulkanContext.device, buffer, bufferMemory, 0);
 }
 
-void CreateBuffer::updateUniformBuffer(uint32_t currentImage)
+void CreateBuffer::updateUniformBuffer(uint32_t currentImage, std::vector<void*> uniformBuffersMapped, float translate)
 {
 	//static auto startTime = std::chrono::high_resolution_clock::now();
 	//auto currentTime = std::chrono::high_resolution_clock::now();
@@ -154,10 +172,13 @@ void CreateBuffer::updateUniformBuffer(uint32_t currentImage)
 
 	UniformBufferObject ubo{};
 	//ubo.model = glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0.0f, -1.0f, 1.0f));
-	ubo.model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::mat4 transform = glm::mat4(1.0f);
+	transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, -translate));
+	transform = glm::rotate(transform, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	ubo.model = transform;
 	//ubo.model = glm::mat4(1.0f);
 	ubo.view = glm::lookAt(gVulkanContext.camera.position, gVulkanContext.camera.position + gVulkanContext.camera.front, glm::vec3(0.0f, 1.0f, 0.0f));
-	ubo.proj = glm::perspective(glm::radians(45.0f), gVulkanContext.swapchainExtent.width / (float)gVulkanContext.swapchainExtent.height, 0.1f, 10.0f);
+	ubo.proj = glm::perspective(glm::radians(45.0f), gVulkanContext.swapchainExtent.width / (float)gVulkanContext.swapchainExtent.height, 0.1f, 100.0f);
 	ubo.proj[1][1] *= -1;
-	memcpy(gVulkanContext.uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
+	memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }

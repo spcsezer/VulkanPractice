@@ -26,7 +26,8 @@ void drawFrame()
 	vkResetCommandBuffer(gVulkanContext.commandBuffers[gVulkanContext.currentFrame], 0);
 	CreateCommandBuffer::recordCommandBuffer(gVulkanContext.commandBuffers[gVulkanContext.currentFrame], imageIndex);
 
-	CreateBuffer::updateUniformBuffer(gVulkanContext.currentFrame);
+	CreateBuffer::updateUniformBuffer(gVulkanContext.currentFrame, gVulkanContext.uniformBuffersMapped, 1.0f);
+	CreateBuffer::updateUniformBuffer(gVulkanContext.currentFrame, gVulkanContext.uniformBuffersMapped2, 5.0f);
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

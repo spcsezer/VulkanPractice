@@ -2,18 +2,22 @@
 
 void CreateDescriptorSets::gCreateDescriptorSets()
 {
-	createDescriptorPool();
-	createDescriptorSets();
-	
+	createDescriptorPool(descriptorPool);
+	createDescriptorSets(gVulkanContext.uniformBuffers, gVulkanContext.textureImageView, gVulkanContext.textureSampler, descriptorSets, gVulkanContext.descriptorSetLayout, descriptorPool);
 	gVulkanContext.descriptorSets = descriptorSets;
+
+	createDescriptorPool(descriptorPool2);
+	createDescriptorSets(gVulkanContext.uniformBuffers2, gVulkanContext.textureImageView2, gVulkanContext.textureSampler2, descriptorSets2, gVulkanContext.descriptorSetLayout2, descriptorPool2);
+	gVulkanContext.descriptorSets2 = descriptorSets2;
 }
 
 void CreateDescriptorSets::cleanUp()
 {
 	vkDestroyDescriptorPool(gVulkanContext.device, descriptorPool, nullptr);
+	vkDestroyDescriptorPool(gVulkanContext.device, descriptorPool2, nullptr);
 }
 
-void CreateDescriptorSets::createDescriptorPool()
+void CreateDescriptorSets::createDescriptorPool(VkDescriptorPool& descriptorPool)
 {
 	std::array<VkDescriptorPoolSize, 2> poolSizes{};
 
@@ -35,9 +39,9 @@ void CreateDescriptorSets::createDescriptorPool()
 	}
 }
 
-void CreateDescriptorSets::createDescriptorSets()
+void CreateDescriptorSets::createDescriptorSets(std::vector<VkBuffer>& uniformBuffers, VkImageView& textureImageView, VkSampler& textureSampler, std::vector<VkDescriptorSet>& descriptorSets, VkDescriptorSetLayout& descriptorSetLayout, VkDescriptorPool& descriptorPool)
 {
-	std::vector<VkDescriptorSetLayout> layouts(gVulkanContext.MAX_FRAMES_IN_FLIGHT, gVulkanContext.descriptorSetLayout);
+	std::vector<VkDescriptorSetLayout> layouts(gVulkanContext.MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
 	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	allocInfo.descriptorPool = descriptorPool;
@@ -53,14 +57,14 @@ void CreateDescriptorSets::createDescriptorSets()
 	for (size_t i = 0; i < gVulkanContext.MAX_FRAMES_IN_FLIGHT; i++)
 	{
 		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer = gVulkanContext.uniformBuffers[i];
+		bufferInfo.buffer = uniformBuffers[i];
 		bufferInfo.offset = 0;
 		bufferInfo.range = sizeof(UniformBufferObject);
 
 		VkDescriptorImageInfo imageInfo{};
 		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		imageInfo.imageView = gVulkanContext.textureImageView;
-		imageInfo.sampler = gVulkanContext.textureSampler;
+		imageInfo.imageView = textureImageView;
+		imageInfo.sampler = textureSampler;
 
 		std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

@@ -11,17 +11,22 @@ class CreateTexture
 private:
 
 	const std::string MODEL_TEXTURE_PATH = "objects/viking_room.png";
-
 	uint32_t mipLevels;
 	VkImage textureImage;
 	VkImageView textureImageView;
 	VkDeviceMemory textureImageMemory;
-
 	VkSampler textureSampler;
 
-	void createTextureImage();
-	void createTextureImageView();
-	void createTextureSampler();
+	const std::string MODEL_TEXTURE_PATH2 = "objects/viking_room.png";
+	uint32_t mipLevels2;
+	VkImage textureImage2;
+	VkImageView textureImageView2;
+	VkDeviceMemory textureImageMemory2;
+	VkSampler textureSampler2;
+
+	void createTextureImage(const std::string& MODEL_TEXTURE_PATH, uint32_t& mipLevels, VkImage& textureImage, VkDeviceMemory& textureImageMemory);
+	void createTextureImageView(uint32_t& mipLevels, VkImage& textureImage, VkImageView& textureImageView);
+	void createTextureSampler(uint32_t& mipLevels, VkSampler& textureSampler);
 
 public:
 
