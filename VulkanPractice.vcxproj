@@ -45,6 +45,7 @@
     <ClInclude Include="Run.hpp" />
     <ClInclude Include="SwapChain.hpp" />
     <ClInclude Include="SwapChainSupportDetails.hpp" />
+    <ClInclude Include="Texture.hpp" />
     <ClInclude Include="UniformBufferObject.hpp" />
     <ClInclude Include="ValidationLayers.hpp" />
     <ClInclude Include="Vertex.hpp" />

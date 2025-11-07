@@ -15,6 +15,9 @@ private:
 	std::vector<Vertex> vertices2;
 	std::vector<uint32_t> indices2;
 
+	std::vector<Vertex> skyVertices;
+	std::vector<uint32_t> skyIndices;
+
 	void loadModel(const std::string& MODEL_PATH, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
 
 public:

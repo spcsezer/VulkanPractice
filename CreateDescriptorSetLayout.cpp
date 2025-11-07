@@ -8,8 +8,12 @@ void CreateDescriptorSetLayout::gCreateDescriptorSetLayout()
 	createDescriptorSetLayout(descriptorSetLayout2);
 	gVulkanContext.descriptorSetLayout2 = descriptorSetLayout2;
 
+	createDescriptorSetLayout(descriptorSetLayout3);
+	gVulkanContext.descriptorSetLayout3 = descriptorSetLayout3;
+
 	gVulkanContext.descriptorSetLayouts.push_back(descriptorSetLayout);
 	gVulkanContext.descriptorSetLayouts.push_back(descriptorSetLayout2);
+	gVulkanContext.descriptorSetLayouts.push_back(descriptorSetLayout3);
 }
 
 void CreateDescriptorSetLayout::cleanUp()
@@ -19,6 +23,9 @@ void CreateDescriptorSetLayout::cleanUp()
 
 	vkDestroyDescriptorSetLayout(gVulkanContext.device, descriptorSetLayout2, nullptr);
 	gVulkanContext.descriptorSetLayout2 = nullptr;
+
+	vkDestroyDescriptorSetLayout(gVulkanContext.device, descriptorSetLayout3, nullptr);
+	gVulkanContext.descriptorSetLayout3 = nullptr;
 }
 
 void CreateDescriptorSetLayout::createDescriptorSetLayout(VkDescriptorSetLayout& descriptorSetLayout)

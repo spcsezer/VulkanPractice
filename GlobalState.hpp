@@ -15,6 +15,7 @@
 #include"Vertex.hpp"
 #include "Camera.hpp"
 #include"Object.hpp"
+#include"Texture.hpp"
 
 struct Vertex;
 
@@ -52,12 +53,17 @@ struct VulkanContext
 
 	VkDescriptorSetLayout descriptorSetLayout;
 	VkDescriptorSetLayout descriptorSetLayout2;
+	VkDescriptorSetLayout descriptorSetLayout3;
 
 	std::vector<VkDescriptorSet> descriptorSets;
 	std::vector<VkDescriptorSet> descriptorSets2;
+	std::vector<VkDescriptorSet> descriptorSets3;
 
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
+
+	VkPipelineLayout skyboxPipelineLayout;
+	VkPipeline skyboxGraphicsPipeline;
 
 	std::vector<VkFramebuffer> swapchainFrameBuffers;
 
@@ -79,6 +85,9 @@ struct VulkanContext
 	std::vector<Vertex> vertices2;
 	std::vector<uint32_t> indices2;
 
+	std::vector<Vertex> skyVertices;
+	std::vector<uint32_t> skyIndices;
+
 	const int MAX_FRAMES_IN_FLIGHT = 2;
 	bool frameBufferResized = false;
 
@@ -92,12 +101,26 @@ struct VulkanContext
 	std::vector<VkBuffer> uniformBuffers2;
 	std::vector<void*> uniformBuffersMapped2;
 
+	VkBuffer vertexBuffer3;
+	VkBuffer indexBuffer3;
+	std::vector<VkBuffer> uniformBuffers3;
+	std::vector<void*> uniformBuffersMapped3;
+
+	/*
 	VkImageView textureImageView;
 	VkSampler textureSampler;
 
 	VkImageView textureImageView2;
 	VkSampler textureSampler2;
 
+	//SKYBOX
+	VkImageView rightSkyImageView;
+	VkSampler rightSkySampler;
+
+	VkImageView leftSkyImageView;
+	VkSampler leftSkySampler;
+	//~SKYBOX
+	*/
 	uint32_t currentFrame = 0;
 
 	std::vector<VkSemaphore> imageAvailableSemaphores;
@@ -113,6 +136,8 @@ struct VulkanContext
 	std::vector<Object> objects;
 	
 	std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
+
+	std::vector<Texture> textures;
 };
 
 extern VulkanContext gVulkanContext;

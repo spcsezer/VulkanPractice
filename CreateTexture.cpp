@@ -5,77 +5,157 @@
 
 void CreateTexture::gCreateTexture()
 {
-	createTextureImage(MODEL_TEXTURE_PATH, mipLevels, textureImage, textureImageMemory);
-	createTextureImageView(mipLevels, textureImage, textureImageView);
-	createTextureSampler(mipLevels, textureSampler);
-	gVulkanContext.textureImageView = textureImageView;
-	gVulkanContext.textureSampler = textureSampler;
+	Texture texture1(MODEL_TEXTURE_PATH, 1, 0, 1, VK_IMAGE_VIEW_TYPE_2D, VK_SAMPLER_ADDRESS_MODE_REPEAT, VK_COMPARE_OP_ALWAYS);
+	gVulkanContext.textures.push_back(texture1);
 
-	createTextureImage(MODEL_TEXTURE_PATH2, mipLevels2, textureImage2, textureImageMemory2);
-	createTextureImageView(mipLevels2, textureImage2, textureImageView2);
-	createTextureSampler(mipLevels2, textureSampler2);
-	gVulkanContext.textureImageView2 = textureImageView2;
-	gVulkanContext.textureSampler2 = textureSampler2;
+	Texture texture2(MODEL_TEXTURE_PATH2, 1, 0, 1, VK_IMAGE_VIEW_TYPE_2D, VK_SAMPLER_ADDRESS_MODE_REPEAT, VK_COMPARE_OP_ALWAYS);
+	gVulkanContext.textures.push_back(texture2);
+
+	Texture sky1(SKY_TEXTURE_PATH, 6, VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT, 6, VK_IMAGE_VIEW_TYPE_CUBE, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE, VK_COMPARE_OP_NEVER);
+	gVulkanContext.textures.push_back(sky1);
+	Texture sky2(SKY_TEXTURE_PATH, 6, VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT, 6, VK_IMAGE_VIEW_TYPE_CUBE, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE, VK_COMPARE_OP_NEVER);
+	gVulkanContext.textures.push_back(sky2);
+	Texture sky3(SKY_TEXTURE_PATH, 6, VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT, 6, VK_IMAGE_VIEW_TYPE_CUBE, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE, VK_COMPARE_OP_NEVER);
+	gVulkanContext.textures.push_back(sky3);
+	Texture sky4(SKY_TEXTURE_PATH, 6, VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT, 6, VK_IMAGE_VIEW_TYPE_CUBE, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE, VK_COMPARE_OP_NEVER);
+	gVulkanContext.textures.push_back(sky4);
+	Texture sky5(SKY_TEXTURE_PATH, 6, VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT, 6, VK_IMAGE_VIEW_TYPE_CUBE, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE, VK_COMPARE_OP_NEVER);
+	gVulkanContext.textures.push_back(sky5);
+	Texture sky6(SKY_TEXTURE_PATH, 6, VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT, 6, VK_IMAGE_VIEW_TYPE_CUBE, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE, VK_COMPARE_OP_NEVER);
+	gVulkanContext.textures.push_back(sky6);
+}
+
+void CreateTexture::pCreateTexture(std::string TEXTURE_PATH, uint32_t& mipLevels, VkImage& textureImage, VkImageView& textureImageView, VkDeviceMemory& textureImageMemory, VkSampler& textureSampler, uint32_t arrayLayers, VkImageCreateFlags flags, VkImageViewType viewType, uint32_t layerCount, VkSamplerAddressMode addressMode, VkCompareOp compareOp)
+{
+	this->createTextureImage(TEXTURE_PATH, mipLevels, textureImage, textureImageMemory, arrayLayers, flags);
+	this->createTextureImageView(mipLevels, textureImage, textureImageView, viewType, layerCount);
+	this->createTextureSampler(mipLevels, textureSampler, addressMode, compareOp);
 }
 
 void CreateTexture::cleanUp()
 {
-	vkDestroySampler(gVulkanContext.device, textureSampler, nullptr);
-	vkDestroyImageView(gVulkanContext.device, textureImageView, nullptr);
-	vkDestroyImage(gVulkanContext.device, textureImage, nullptr);
-	vkFreeMemory(gVulkanContext.device, textureImageMemory, nullptr);
-	gVulkanContext.textureImageView = nullptr;
-	gVulkanContext.textureSampler = nullptr;
-
-	vkDestroySampler(gVulkanContext.device, textureSampler2, nullptr);
-	vkDestroyImageView(gVulkanContext.device, textureImageView2, nullptr);
-	vkDestroyImage(gVulkanContext.device, textureImage2, nullptr);
-	vkFreeMemory(gVulkanContext.device, textureImageMemory2, nullptr);
-	gVulkanContext.textureImageView2 = nullptr;
-	gVulkanContext.textureSampler2 = nullptr;
-}
-
-void CreateTexture::createTextureImage(const std::string& MODEL_TEXTURE_PATH, uint32_t& mipLevels, VkImage& textureImage, VkDeviceMemory& textureImageMemory)
-{
-	int texWidth, texHeight, texChannels;
-	stbi_uc* pixels = stbi_load(MODEL_TEXTURE_PATH.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-	VkDeviceSize imageSize = texWidth * texHeight * 4;
-
-	if (!pixels)
+	for (Texture text : gVulkanContext.textures)
 	{
-		throw std::runtime_error("!-- Failed to load texture image --!");
+		text.cleanTexture(gVulkanContext.device);
 	}
-
-	mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
-
-	VkBuffer stagingBuffer;
-	VkDeviceMemory stagingBufferMemory;
-	CreateBuffer::createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory, "Texture Staging");
-
-	void* data;
-	vkMapMemory(gVulkanContext.device, stagingBufferMemory, 0, imageSize, 0, &data);
-	memcpy(data, pixels, static_cast<uint32_t> (imageSize));
-	vkUnmapMemory(gVulkanContext.device, stagingBufferMemory);
-
-	stbi_image_free(pixels);
-
-	CreateResources::createImage(texWidth, texHeight, mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
-
-	CreateResources::transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
-	CreateBuffer::copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
-
-	vkDestroyBuffer(gVulkanContext.device, stagingBuffer, nullptr);
-	vkFreeMemory(gVulkanContext.device, stagingBufferMemory, nullptr);
-
-	generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels);
 }
 
-void CreateTexture::createTextureImageView(uint32_t& mipLevels, VkImage& textureImage, VkImageView& textureImageView)
+void CreateTexture::createTextureImage(const std::string& MODEL_TEXTURE_PATH, uint32_t& mipLevels, VkImage& textureImage, VkDeviceMemory& textureImageMemory, uint32_t arrayLayers, VkImageCreateFlags flags)
 {
-	textureImageView = CreateImageViews::createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
+	if (flags & VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT)
+	{
+		std::array<std::string, 6> faces = {
+			SKY_TEXTURE_PATH + "/px.png",
+			SKY_TEXTURE_PATH + "/nx.png",
+			SKY_TEXTURE_PATH + "/py.png",
+			SKY_TEXTURE_PATH + "/ny.png",
+			SKY_TEXTURE_PATH + "/pz.png",
+			SKY_TEXTURE_PATH + "/nz.png",
+		};
+
+		int w = 0, h = 0, ch = 0;
+		std::array<stbi_uc*, 6> facePixels{};
+		for (uint32_t i = 0; i < 6; i++) {
+			facePixels[i] = stbi_load(faces[i].c_str(), &w, &h, &ch, STBI_rgb_alpha);
+			if (!facePixels[i]) throw std::runtime_error("Failed to load cubemap face");
+		}
+
+		mipLevels = 1;
+
+		VkDeviceSize faceSize = (VkDeviceSize)w * h * 4;
+		VkDeviceSize totalSize = faceSize * 6;
+
+		VkBuffer stagingBuffer; VkDeviceMemory stagingMem;
+		CreateBuffer::createBuffer(totalSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+			stagingBuffer, stagingMem, "Cube Staging");
+
+		void* data = nullptr;
+		vkMapMemory(gVulkanContext.device, stagingMem, 0, totalSize, 0, &data);
+		for (uint32_t i = 0; i < 6; i++) {
+			memcpy((uint8_t*)data + i * faceSize, facePixels[i], (size_t)faceSize);
+			stbi_image_free(facePixels[i]);
+		}
+		vkUnmapMemory(gVulkanContext.device, stagingMem);
+
+		CreateResources::createImage(w, h, mipLevels, VK_SAMPLE_COUNT_1_BIT,
+			VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
+			VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+			textureImage, textureImageMemory,
+			6, flags);
+
+		CreateResources::transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB,
+			VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			mipLevels, 6);
+
+		std::vector<VkBufferImageCopy> regions(6);
+		for (uint32_t face = 0; face < 6; ++face) {
+			regions[face].bufferOffset = face * faceSize;
+			regions[face].bufferRowLength = 0;
+			regions[face].bufferImageHeight = 0;
+			regions[face].imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			regions[face].imageSubresource.mipLevel = 0;
+			regions[face].imageSubresource.baseArrayLayer = face;
+			regions[face].imageSubresource.layerCount = 1;
+			regions[face].imageOffset = { 0,0,0 };
+			regions[face].imageExtent = { (uint32_t)w, (uint32_t)h, 1 };
+		}
+
+		VkCommandBuffer cmd = CreateCommandBuffer::beginSingleTimeCommands();
+		vkCmdCopyBufferToImage(cmd, stagingBuffer, textureImage,
+			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			(uint32_t)regions.size(), regions.data());
+		CreateCommandBuffer::endSingleTimeCommands(cmd);
+
+		CreateResources::transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB,
+			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+			mipLevels, 6);
+
+		vkDestroyBuffer(gVulkanContext.device, stagingBuffer, nullptr);
+		vkFreeMemory(gVulkanContext.device, stagingMem, nullptr);
+	}
+	else {
+		int texWidth, texHeight, texChannels;
+		stbi_uc* pixels = stbi_load(MODEL_TEXTURE_PATH.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+		VkDeviceSize imageSize = texWidth * texHeight * 4;
+
+		if (!pixels)
+		{
+			throw std::runtime_error("!-- Failed to load texture image --!");
+		}
+
+		mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
+
+		VkBuffer stagingBuffer;
+		VkDeviceMemory stagingBufferMemory;
+		CreateBuffer::createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory, "Texture Staging");
+
+		void* data;
+		vkMapMemory(gVulkanContext.device, stagingBufferMemory, 0, imageSize, 0, &data);
+		memcpy(data, pixels, static_cast<uint32_t> (imageSize));
+		vkUnmapMemory(gVulkanContext.device, stagingBufferMemory);
+
+		stbi_image_free(pixels);
+
+		CreateResources::createImage(texWidth, texHeight, mipLevels, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory, arrayLayers, flags);
+
+		CreateResources::transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels, arrayLayers);
+		CreateBuffer::copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), arrayLayers);
+
+		vkDestroyBuffer(gVulkanContext.device, stagingBuffer, nullptr);
+		vkFreeMemory(gVulkanContext.device, stagingBufferMemory, nullptr);
+
+		generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels);
+	}
 }
 
-void CreateTexture::createTextureSampler(uint32_t& mipLevels, VkSampler& textureSampler)
+void CreateTexture::createTextureImageView(uint32_t& mipLevels, VkImage& textureImage, VkImageView& textureImageView, VkImageViewType viewType, uint32_t layerCount)
+{
+	textureImageView = CreateImageViews::createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels, viewType, layerCount);
+}
+
+void CreateTexture::createTextureSampler(uint32_t& mipLevels, VkSampler& textureSampler, VkSamplerAddressMode addressMode, VkCompareOp compareOp)
 {
 	VkPhysicalDeviceProperties properties{};
 	vkGetPhysicalDeviceProperties(gVulkanContext.physicalDevice, &properties);
@@ -84,9 +164,9 @@ void CreateTexture::createTextureSampler(uint32_t& mipLevels, VkSampler& texture
 	samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 	samplerInfo.magFilter = VK_FILTER_LINEAR;
 	samplerInfo.minFilter = VK_FILTER_LINEAR;
-	samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-	samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-	samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+	samplerInfo.addressModeU = addressMode;
+	samplerInfo.addressModeV = addressMode;
+	samplerInfo.addressModeW = addressMode;
 	samplerInfo.anisotropyEnable = VK_TRUE;
 	samplerInfo.maxAnisotropy = properties.limits.maxSamplerAnisotropy;
 	samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
@@ -174,4 +254,19 @@ void CreateTexture::generateMipmaps(VkImage image, VkFormat imageFormat, int32_t
 	vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
 	CreateCommandBuffer::endSingleTimeCommands(commandBuffer);
+}
+
+void Texture::createTexture(const std::string TEXTURE_PATH, uint32_t arrayLayers, VkImageCreateFlags flags, uint32_t layerCount, VkImageViewType viewType, VkSamplerAddressMode addressMode, VkCompareOp compareOp)
+{
+	CreateTexture ct;
+
+	this->TEXTURE_PATH = TEXTURE_PATH;
+	this->arrayLayers = arrayLayers;
+	this->flags = flags;
+	this->viewType = viewType;
+	this->layerCount = layerCount;
+	this->addressMode = addressMode;
+	this->compareOp = compareOp;
+
+	ct.pCreateTexture(TEXTURE_PATH, TextureMipLevels, TextureImage, TextureImageView, TextureImageMemory, TextureSampler, arrayLayers, flags, viewType, layerCount, addressMode, compareOp);
 }

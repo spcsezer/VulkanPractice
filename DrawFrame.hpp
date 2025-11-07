@@ -1,10 +1,3 @@
-#pragma once
-
-#include"GlobalState.hpp"
-#include"SwapChain.hpp"
-#include"CreateCommandBuffer.hpp"
-#include"CreateBuffer.hpp"
-
 void drawFrame()
 {
 	vkWaitForFences(gVulkanContext.device, 1, &gVulkanContext.inFlightFences[gVulkanContext.currentFrame], VK_TRUE, UINT64_MAX);
@@ -21,6 +14,7 @@ void drawFrame()
 	{
 		throw std::runtime_error("!-- Failed to acquire swapchain image --!");
 	}
+
 	vkResetFences(gVulkanContext.device, 1, &gVulkanContext.inFlightFences[gVulkanContext.currentFrame]);
 
 	vkResetCommandBuffer(gVulkanContext.commandBuffers[gVulkanContext.currentFrame], 0);
@@ -28,6 +22,7 @@ void drawFrame()
 
 	CreateBuffer::updateUniformBuffer(gVulkanContext.currentFrame, gVulkanContext.uniformBuffersMapped, 1.0f);
 	CreateBuffer::updateUniformBuffer(gVulkanContext.currentFrame, gVulkanContext.uniformBuffersMapped2, 5.0f);
+	CreateBuffer::updateUniformBufferForSkybox(gVulkanContext.currentFrame, gVulkanContext.uniformBuffersMapped3);
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

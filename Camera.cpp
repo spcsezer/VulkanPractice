@@ -47,10 +47,11 @@ void CameraNew::handleMouse(double xpos, double ypos)
 	front = glm::normalize(direction);
 }
 
-void CameraNew::update()
+void CameraNew::update(float deltaTime)
 {
 	glm::vec3 right = glm::normalize(glm::cross(front, glm::vec3(0.0f, 1.0f, 0.0f)));
+	up = glm::normalize(glm::cross(right, front));
 
-	float speed = 0.00125f;
+	float speed = 1.0f * deltaTime;
 	position += (front * -velocity.z + right * velocity.x) * speed;
 }

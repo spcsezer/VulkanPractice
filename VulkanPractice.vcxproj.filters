@@ -91,6 +91,9 @@
     <Filter Include="Structs\Object">
       <UniqueIdentifier>{33a23086-b944-4c68-817e-823986ba18df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Structs\Texture">
+      <UniqueIdentifier>{67860adc-bfe7-41e1-a079-fc16243f52b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GlobalState.hpp">
@@ -179,6 +182,9 @@
     </ClInclude>
     <ClInclude Include="Object.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.hpp">
+      <Filter>Structs\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

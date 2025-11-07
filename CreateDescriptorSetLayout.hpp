@@ -8,6 +8,7 @@ private:
 
 	VkDescriptorSetLayout descriptorSetLayout;
 	VkDescriptorSetLayout descriptorSetLayout2;
+	VkDescriptorSetLayout descriptorSetLayout3;
 
 	void createDescriptorSetLayout(VkDescriptorSetLayout& descriptorSetLayout);
 

@@ -18,6 +18,15 @@ void CreateBuffer::gCreateBuffer()
 	gVulkanContext.indexBuffer2 = indexBuffer2;
 	gVulkanContext.uniformBuffers2 = uniformBuffers2;
 	gVulkanContext.uniformBuffersMapped2 = uniformBuffersMapped2;
+
+	//SKKYBOX
+	createVertexBuffer(gVulkanContext.skyVertices, vertexBuffer3, vertexBufferMemory3);
+	createIndexBuffer(gVulkanContext.skyIndices, indexBuffer3, indexBufferMemory3);
+	createUniformBuffers(uniformBuffers3, uniformBuffersMemory3, uniformBuffersMapped3);
+	gVulkanContext.vertexBuffer3 = vertexBuffer3;
+	gVulkanContext.indexBuffer3 = indexBuffer3;
+	gVulkanContext.uniformBuffers3 = uniformBuffers3;
+	gVulkanContext.uniformBuffersMapped3 = uniformBuffersMapped3;
 }
 
 void CreateBuffer::cleanUp()
@@ -41,6 +50,17 @@ void CreateBuffer::cleanUp()
 	vkFreeMemory(gVulkanContext.device, vertexBufferMemory2, nullptr);
 	vkDestroyBuffer(gVulkanContext.device, indexBuffer2, nullptr);
 	vkFreeMemory(gVulkanContext.device, indexBufferMemory2, nullptr);
+
+	//SKYBOX
+	for (size_t i = 0; i < gVulkanContext.MAX_FRAMES_IN_FLIGHT; i++)
+	{
+		vkDestroyBuffer(gVulkanContext.device, uniformBuffers3[i], nullptr);
+		vkFreeMemory(gVulkanContext.device, uniformBuffersMemory3[i], nullptr);
+	}
+	vkDestroyBuffer(gVulkanContext.device, vertexBuffer3, nullptr);
+	vkFreeMemory(gVulkanContext.device, vertexBufferMemory3, nullptr);
+	vkDestroyBuffer(gVulkanContext.device, indexBuffer3, nullptr);
+	vkFreeMemory(gVulkanContext.device, indexBufferMemory3, nullptr);
 }
 
 void CreateBuffer::createVertexBuffer(std::vector<Vertex>& vertices, VkBuffer& vertexBuffer, VkDeviceMemory& vertexBufferMemory)
@@ -113,22 +133,29 @@ void CreateBuffer::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSi
 	CreateCommandBuffer::endSingleTimeCommands(commandBuffer);
 }
 
-void CreateBuffer::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
+void CreateBuffer::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount)
 {
 	VkCommandBuffer commandBuffer = CreateCommandBuffer::beginSingleTimeCommands();
 
-	VkBufferImageCopy region{};
-	region.bufferOffset = 0;
-	region.bufferRowLength = 0;
-	region.bufferImageHeight = 0;
-	region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-	region.imageSubresource.mipLevel = 0;
-	region.imageSubresource.baseArrayLayer = 0;
-	region.imageSubresource.layerCount = 1;
-	region.imageOffset = { 0, 0, 0 };
-	region.imageExtent = { width, height, 1 };
+	VkDeviceSize faceSize = static_cast<VkDeviceSize>(width) * height * 4;
 
-	vkCmdCopyBufferToImage(commandBuffer, buffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+	std::vector<VkBufferImageCopy> regions(layerCount);
+	for (uint32_t i = 0; i < layerCount; ++i) {
+		VkBufferImageCopy& region = regions[i];
+		region.bufferOffset = faceSize * i;
+		region.bufferRowLength = 0;
+		region.bufferImageHeight = 0;
+
+		region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		region.imageSubresource.mipLevel = 0;
+		region.imageSubresource.baseArrayLayer = i;
+		region.imageSubresource.layerCount = 1;
+
+		region.imageOffset = { 0, 0, 0 };
+		region.imageExtent = { width, height, 1 };
+	}
+
+	vkCmdCopyBufferToImage(commandBuffer, buffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, static_cast<uint32_t>(regions.size()), regions.data());
 
 	CreateCommandBuffer::endSingleTimeCommands(commandBuffer);
 }
@@ -180,5 +207,21 @@ void CreateBuffer::updateUniformBuffer(uint32_t currentImage, std::vector<void*>
 	ubo.view = glm::lookAt(gVulkanContext.camera.position, gVulkanContext.camera.position + gVulkanContext.camera.front, glm::vec3(0.0f, 1.0f, 0.0f));
 	ubo.proj = glm::perspective(glm::radians(45.0f), gVulkanContext.swapchainExtent.width / (float)gVulkanContext.swapchainExtent.height, 0.1f, 100.0f);
 	ubo.proj[1][1] *= -1;
+	memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
+}
+
+void CreateBuffer::updateUniformBufferForSkybox(uint32_t currentImage, std::vector<void*> uniformBuffersMapped)
+{
+	UniformBufferObject ubo{};
+
+	glm::mat4 cameraView = glm::lookAt(gVulkanContext.camera.position, gVulkanContext.camera.position + gVulkanContext.camera.front, gVulkanContext.camera.up);
+
+	glm::mat4 cameraProj = glm::perspective(glm::radians(45.0f), gVulkanContext.swapchainExtent.width / (float)gVulkanContext.swapchainExtent.height, 0.1f, 100.0f);
+
+	ubo.model = glm::mat4(1.0f);
+	ubo.view = glm::mat4(glm::mat3(cameraView));
+	ubo.proj = cameraProj;
+	ubo.proj[1][1] *= -1;
+
 	memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }

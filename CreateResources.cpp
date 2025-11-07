@@ -34,22 +34,22 @@ void CreateResources::createColorResources()
 {
 	VkFormat colorFormat = gVulkanContext.swapchainImageFormat;
 
-	createImage(gVulkanContext.swapchainExtent.width, gVulkanContext.swapchainExtent.height, 1, gVulkanContext.msaaSamples, colorFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, colorImage, colorImageMemory);
-	colorImageView = CreateImageViews::createImageView(colorImage, colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+	createImage(gVulkanContext.swapchainExtent.width, gVulkanContext.swapchainExtent.height, 1, gVulkanContext.msaaSamples, colorFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, colorImage, colorImageMemory, 1, 0);
+	colorImageView = CreateImageViews::createImageView(colorImage, colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, VK_IMAGE_VIEW_TYPE_2D, 1);
 }
 
 void CreateResources::createDepthResources()
 {
 	VkFormat depthFormat = findDepthFormat();
 
-	createImage(gVulkanContext.swapchainExtent.width, gVulkanContext.swapchainExtent.height, 1, gVulkanContext.msaaSamples, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
+	createImage(gVulkanContext.swapchainExtent.width, gVulkanContext.swapchainExtent.height, 1, gVulkanContext.msaaSamples, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory, 1, 0);
 
-	depthImageView = CreateImageViews::createImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
+	depthImageView = CreateImageViews::createImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1, VK_IMAGE_VIEW_TYPE_2D, 1);
 
-	transitionImageLayout(depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
+	transitionImageLayout(depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1, 1);
 }
 
-void CreateResources::createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory)
+void CreateResources::createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory, uint32_t arrayLayers, VkImageCreateFlags flags)
 {
 	VkImageCreateInfo imageInfo{};
 	imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -58,14 +58,14 @@ void CreateResources::createImage(uint32_t width, uint32_t height, uint32_t mipL
 	imageInfo.extent.height = height;
 	imageInfo.extent.depth = 1;
 	imageInfo.mipLevels = mipLevels;
-	imageInfo.arrayLayers = 1;
+	imageInfo.arrayLayers = arrayLayers;
 	imageInfo.format = format;
 	imageInfo.tiling = tiling;
 	imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	imageInfo.usage = usage;
 	imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 	imageInfo.samples = numSamples;
-	imageInfo.flags = 0;
+	imageInfo.flags = flags;
 
 	if (vkCreateImage(gVulkanContext.device, &imageInfo, nullptr, &image) != VK_SUCCESS)
 	{
@@ -103,7 +103,7 @@ uint32_t CreateResources::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFl
 	throw std::runtime_error("!-- Failed to find suitable memory type --!");
 }
 
-void CreateResources::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels)
+void CreateResources::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels, uint32_t layerCount)
 {
 	VkCommandBuffer commandBuffer = CreateCommandBuffer::beginSingleTimeCommands();
 
@@ -117,7 +117,7 @@ void CreateResources::transitionImageLayout(VkImage image, VkFormat format, VkIm
 	barrier.subresourceRange.baseMipLevel = 0;
 	barrier.subresourceRange.levelCount = mipLevels;
 	barrier.subresourceRange.baseArrayLayer = 0;
-	barrier.subresourceRange.layerCount = 1;
+	barrier.subresourceRange.layerCount = layerCount;
 
 	VkPipelineStageFlags sourceStage;
 	VkPipelineStageFlags destinationStage;

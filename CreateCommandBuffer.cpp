@@ -99,6 +99,14 @@ void CreateCommandBuffer::recordCommandBuffer(VkCommandBuffer commandBuffer, uin
 	scissor.extent = gVulkanContext.swapchainExtent;
 	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, gVulkanContext.skyboxGraphicsPipeline);
+	VkBuffer skyboxVertexBuffers[] = { gVulkanContext.vertexBuffer3 };
+	VkDeviceSize skyboxOffsets[] = { 0 };
+	vkCmdBindVertexBuffers(commandBuffer, 0, 1, skyboxVertexBuffers, skyboxOffsets);
+	vkCmdBindIndexBuffer(commandBuffer, gVulkanContext.indexBuffer3, 0, VK_INDEX_TYPE_UINT32);
+	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, gVulkanContext.skyboxPipelineLayout, 0, 1, &gVulkanContext.descriptorSets3[imageIndex], 0, nullptr);
+	vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(gVulkanContext.skyIndices.size()), 1, 0, 0, 0);
+
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, gVulkanContext.graphicsPipeline);
 	for (auto& obj : gVulkanContext.objects)
 	{

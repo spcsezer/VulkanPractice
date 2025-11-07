@@ -3,12 +3,16 @@
 void CreateDescriptorSets::gCreateDescriptorSets()
 {
 	createDescriptorPool(descriptorPool);
-	createDescriptorSets(gVulkanContext.uniformBuffers, gVulkanContext.textureImageView, gVulkanContext.textureSampler, descriptorSets, gVulkanContext.descriptorSetLayout, descriptorPool);
+	createDescriptorSets(gVulkanContext.uniformBuffers, gVulkanContext.textures[0].getTextureImageView(), gVulkanContext.textures[0].getTextureSampler(), descriptorSets, gVulkanContext.descriptorSetLayout, descriptorPool);
 	gVulkanContext.descriptorSets = descriptorSets;
 
 	createDescriptorPool(descriptorPool2);
-	createDescriptorSets(gVulkanContext.uniformBuffers2, gVulkanContext.textureImageView2, gVulkanContext.textureSampler2, descriptorSets2, gVulkanContext.descriptorSetLayout2, descriptorPool2);
+	createDescriptorSets(gVulkanContext.uniformBuffers2, gVulkanContext.textures[1].getTextureImageView(), gVulkanContext.textures[1].getTextureSampler(), descriptorSets2, gVulkanContext.descriptorSetLayout2, descriptorPool2);
 	gVulkanContext.descriptorSets2 = descriptorSets2;
+
+	createDescriptorPool(descriptorPool3);
+	createDescriptorSets(gVulkanContext.uniformBuffers3, gVulkanContext.textures[2].getTextureImageView(), gVulkanContext.textures[2].getTextureSampler(), descriptorSets3, gVulkanContext.descriptorSetLayout3, descriptorPool3);
+	gVulkanContext.descriptorSets3 = descriptorSets3;
 
 	Object object1;
 	object1.vertexBuffer = gVulkanContext.vertexBuffer;
@@ -30,6 +34,7 @@ void CreateDescriptorSets::cleanUp()
 {
 	vkDestroyDescriptorPool(gVulkanContext.device, descriptorPool, nullptr);
 	vkDestroyDescriptorPool(gVulkanContext.device, descriptorPool2, nullptr);
+	vkDestroyDescriptorPool(gVulkanContext.device, descriptorPool3, nullptr);
 }
 
 void CreateDescriptorSets::createDescriptorPool(VkDescriptorPool& descriptorPool)

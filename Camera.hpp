@@ -12,6 +12,7 @@ struct CameraNew
 	glm::vec3 velocity{ 0.0f };
 	glm::vec3 position{ 0.0f };
 	glm::vec3 front{ 0.0f, 0.0f, -1.0f };
+	glm::vec3 up{ 0.0f, 1.0f, 0.0f };
 
 	float pitch = 0.0f;
 
@@ -26,5 +27,5 @@ struct CameraNew
 	void handleKey(GLFWwindow* window);
 	void handleMouse(double xpos, double ypos);
 
-	void update();
+	void update(float deltaTime);
 };

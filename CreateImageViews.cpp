@@ -20,22 +20,22 @@ void CreateImageViews::createImageViews()
 
 	for (size_t i = 0; i < gVulkanContext.swapchainImages.size(); i++)
 	{
-		swapchainImageViews[i] = createImageView(gVulkanContext.swapchainImages[i], gVulkanContext.swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+		swapchainImageViews[i] = createImageView(gVulkanContext.swapchainImages[i], gVulkanContext.swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, VK_IMAGE_VIEW_TYPE_2D, 1);
 	}
 }
 
-VkImageView CreateImageViews::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels)
+VkImageView CreateImageViews::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels, VkImageViewType viewType, uint32_t layerCount)
 {
 	VkImageViewCreateInfo viewInfo{};
 	viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 	viewInfo.image = image;
-	viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+	viewInfo.viewType = viewType;
 	viewInfo.format = format;
 	viewInfo.subresourceRange.aspectMask = aspectFlags;
 	viewInfo.subresourceRange.baseMipLevel = 0;
 	viewInfo.subresourceRange.levelCount = mipLevels;
 	viewInfo.subresourceRange.baseArrayLayer = 0;
-	viewInfo.subresourceRange.layerCount = 1;
+	viewInfo.subresourceRange.layerCount = layerCount;
 
 	VkImageView imageView;
 
